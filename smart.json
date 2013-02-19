@@ -1,0 +1,9 @@
+{
+  "name": "profile-online",
+  "description": "Add and auto-update profile.online field to users collection.",
+  "homepage": "https://github.com/erundook/meteor-profile-online",
+  "author": "Vitaly A. Sorokin",
+  "version": "0.1.0",
+  "git": "https://github.com/erundook/meteor-profile-online.git"
+}
+
