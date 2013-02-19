@@ -1,5 +1,5 @@
 Meteor.__original_logout = Meteor.logout
-Meteor.logout(callback) = ->
+Meteor.logout = (callback) ->
   Meteor.users.update Meteor.userId(), $set: {'profile.online': false}
   Meteor.__original_logout(callback)
 Meteor.autorun ->
