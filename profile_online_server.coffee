@@ -8,7 +8,7 @@ Meteor.methods
     (setOnline = (online) =>
       user = Meteor.users.findOne(@userId)
       unless user.profile.online is online
-        Meteor.users.update user._id, $set: {'profile.online': true}
+        Meteor.users.update user._id, $set: {'profile.online': online}
     )(true)
     Meteor.keepalive[@userId] = Meteor.setTimeout (=>
       delete Meteor.keepalive[@userId]
