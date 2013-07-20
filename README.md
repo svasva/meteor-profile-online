@@ -21,6 +21,14 @@ Install it, sign in to your application and you will get
 your ```profile.online``` field set to ```true```. Log out,
 and it goes ```false```.
 
+You can use Meteor._onLogin and Meteor._onLogout callbacks
+server-side to do stuff when users comes in and out.
+Example:
+```javascript
+Meteor._onLogin  = function (userId) { console.log(userId + "just logged in.") }
+Meteor._onLogout = function (userId) { console.log(userId + "just logged out.") }
+```
+
 ## Configuring
 
 There are two global variables this SmartPackage rely at:
