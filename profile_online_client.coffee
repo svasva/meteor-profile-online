@@ -1,9 +1,10 @@
 Meteor.__original_logout = Meteor.logout
 Meteor.logout = (callback) ->
-  Meteor.users.update Meteor.userId(), $set: {'profile.online': false}
+  Meteor.call('_goOffline')
   Meteor.__original_logout(callback)
 Meteor.autorun ->
+  return false unless userId = Meteor.userId()
   userInterval = config?.keepalive?.interval ? 60
-  (update = -> Meteor.call('keepalive') if Meteor.userId())()
-  Meteor.clearInterval(Meteor.keepalive) if Meteor.keepalive?
-  Meteor.keepalive = Meteor.setInterval(update, userInterval * 1000)
+  (update = -> Meteor.call('_keepAlive') if userId)()
+  Meteor.clearInterval(Meteor._keepalive) if Meteor._keepalive?
+  Meteor._keepalive = Meteor.setInterval(update, userInterval * 1000)

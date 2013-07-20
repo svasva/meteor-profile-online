@@ -1,19 +1,23 @@
 Meteor.methods
-  keepalive: (params) ->
+  _goOffline: ->
+    return false unless @userId
+    Meteor.users.update @userId, $set: {'profile.online': false}
+    Meteor._onLogout?(@userId)
+  _keepAlive: (params) ->
     userInterval = config?.keepalive?.interval ? 60
     userTimeout = config?.keepalive?.timeout ? 10
     return false unless @userId
-    Meteor.keepalive ?= {}
-    Meteor.clearTimeout Meteor.keepalive[@userId] if Meteor.keepalive[@userId]
+    Meteor._keepalive ?= {}
+    Meteor.clearTimeout Meteor._keepalive[@userId] if Meteor._keepalive[@userId]
     (setOnline = (online) =>
       user = Meteor.users.findOne(@userId)
-	  ## Fabdrol: added the ?s to prevent the error mentioned in issue #2
-	  ## https://github.com/erundook/meteor-profile-online/issues/2
       unless user?.profile?.online is online
         Meteor.users.update user._id, $set: {'profile.online': online}
+        if online then Meteor._onLogin?(user._id)
+        else Meteor._onLogout?(user._id)
     )(true)
-    Meteor.keepalive[@userId] = Meteor.setTimeout (=>
-      delete Meteor.keepalive[@userId]
+    Meteor._keepalive[@userId] = Meteor.setTimeout (=>
+      delete Meteor._keepalive[@userId]
       setOnline(false)
     ), (userInterval + userTimeout) * 1000
     return true
